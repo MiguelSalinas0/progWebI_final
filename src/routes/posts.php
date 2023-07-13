@@ -8,6 +8,7 @@ $app->get('/post/getallpostuser/{id}', 'getAllPostU');
 $app->put('/post/update', 'updateContPost');
 $app->delete('/post/remove/{id}', 'removePost');
 
+$app->post('/post/addcomment', 'addComment');
 
 function getAll($request, $response)
 {
@@ -44,6 +45,13 @@ function updateContPost($request, $response)
 function removePost($request, $response, $args)
 {
     $datos = deletePost($request, $response, $args);
+    $response->getBody()->write(json_encode($datos, JSON_PRETTY_PRINT));
+    return $response;
+}
+
+function addComment($request, $response)
+{
+    $datos = commentAdd($request, $response);
     $response->getBody()->write(json_encode($datos, JSON_PRETTY_PRINT));
     return $response;
 }

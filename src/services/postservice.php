@@ -151,13 +151,13 @@ function deletePost($request, $response, $args)
     $id = $args['id'];
     $data = [];
     try {
-        $query = 'DELETE FROM posts p WHERE p.post_id = ?';
+        removeComments($id);
+        $query = 'DELETE FROM posts WHERE post_id = ?';
         $statement = $pdo->prepare($query);
         $statement->bindParam(1, $id);
         $statement->execute();
         if ($statement->rowCount() > 0) {
-            $post = getOnePost($id);
-            $data = ['success' => true, 'data' => $post];
+            $data = ['success' => true, 'message' => 'Post eliminado exitosamente.'];
         } else {
             $data = ['success' => false, 'message' => 'No se encontró el post especificado.'];
         }
@@ -168,7 +168,7 @@ function deletePost($request, $response, $args)
 }
 
 
-// Se trae un unico post - utilizado en registrar, actualizar y eliminar
+// Se trae un unico post - utilizado en registrar, actualizar
 function getOnePost($id)
 {
     global $pdo;

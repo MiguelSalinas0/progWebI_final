@@ -56,6 +56,17 @@ function commentAdd($request, $response)
 }
 
 
+// Eliminar comentarios
+function removeComments($id)
+{
+    global $pdo;
+    $query = 'DELETE FROM comments WHERE post_id = ?';
+    $statement = $pdo->prepare($query);
+    $statement->bindParam(1, $id);
+    $statement->execute();
+}
+
+
 // Trae un unico comentario - utilizado en agregar
 function getOneComment($id)
 {

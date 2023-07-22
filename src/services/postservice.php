@@ -151,6 +151,10 @@ function deletePost($request, $response, $args)
     $id = $args['id'];
     $data = [];
     try {
+        $queryLike = 'DELETE FROM likes WHERE post_id = ?';
+        $statementLike = $pdo->prepare($queryLike);
+        $statementLike->bindParam(1, $id);
+        $statementLike->execute();
         removeComments($id);
         $query = 'DELETE FROM posts WHERE post_id = ?';
         $statement = $pdo->prepare($query);

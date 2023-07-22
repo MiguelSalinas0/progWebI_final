@@ -2,7 +2,7 @@
 
 require __DIR__ . '/../services/userservice.php';
 
-$app->get('/user/getall', 'getAllUsers');
+$app->get('/user/getall/{id}', 'getAllUsers');
 $app->get('/user/getuser/{id}', 'getUser');
 $app->get('/user/getfollowers/{id}', 'getFollow');
 $app->post('/user/register', 'register');
@@ -10,9 +10,9 @@ $app->post('/user/login', 'login');
 $app->put('/user/update/{id}', 'updateInfo');
 
 
-function getAllUsers($request, $response)
+function getAllUsers($request, $response, $args)
 {
-    $datos = getAllUser($request, $response);
+    $datos = getAllUser($request, $response, $args);
     $response->getBody()->write(json_encode($datos, JSON_PRETTY_PRINT));
     return $response;
 }

@@ -28,15 +28,17 @@ function ingresar($request, $response)
 
 
 // Trae a todos los usuarios
-function getAllUser($request, $response)
+function getAllUser($request, $response, $args)
 {
     global $pdo;
+    $id = $args['id'];
     $data = [];
     try {
-        $query = "SELECT u.user_id, u.nombre, u.apellido, u.correo_electronico, u.biografia, 
-        (SELECT COUNT(*) FROM followers f WHERE u.user_id = f.followed_user_id) AS cantidad_seguidores
-        FROM users u;";
+        $query = "SELECT u.user_id, u.nombre, u.apellido, u.correo_electronico, u.biografia, u.profile
+        FROM users u
+        WHERE u.user_id <> ?;";
         $statement = $pdo->prepare($query);
+        $statement->bindParam(1, $id);
         $statement->execute();
         $users = $statement->fetchAll(PDO::FETCH_ASSOC);
         $data = ['success' => true, 'data' => $users];

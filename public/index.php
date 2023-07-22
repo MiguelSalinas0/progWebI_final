@@ -33,6 +33,7 @@ if ($method == "OPTIONS") {
 }
 
 require __DIR__ . '../../src/routes/posts.php';
+require __DIR__ . '../../src/routes/follow.php';
 require __DIR__ . '../../src/routes/users.php';
 require __DIR__ . '../../src/routes/likes.php';
 

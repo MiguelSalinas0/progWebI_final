@@ -25,14 +25,12 @@ function evalFollow($request, $response)
 
 
 // Dejar de seguir a un usuario
-function deleteFollow($request, $response)
+function deleteFollow($request, $response, $args)
 {
     global $pdo;
     $data = [];
-    $body = $request->getBody();
-    $jsonData = json_decode($body, true);
-    $user_id = $jsonData['user_id'];
-    $followed_user_id = $jsonData['followed_user_id'];
+    $user_id = $args['user_id'];
+    $followed_user_id = $args['followed_user_id'];
     try {
         $query = "DELETE FROM followers WHERE user_id = ? AND followed_user_id = ?";
         $statement = $pdo->prepare($query);

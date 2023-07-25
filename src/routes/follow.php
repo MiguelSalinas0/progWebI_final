@@ -4,7 +4,7 @@ require __DIR__ . '/../services/followservice.php';
 
 $app->post('/follow/eval', 'EvalFollowUser');
 $app->post('/follow/add', 'AddFollowUser');
-$app->delete('/follow/remove', 'RemoveFollowUser');
+$app->delete('/follow/remove/{user_id}/{followed_user_id}', 'RemoveFollowUser');
 
 
 function EvalFollowUser($request, $response)
@@ -23,9 +23,9 @@ function AddFollowUser($request, $response)
 }
 
 
-function RemoveFollowUser($request, $response)
+function RemoveFollowUser($request, $response, $args)
 {
-    $datos = deleteFollow($request, $response);
+    $datos = deleteFollow($request, $response, $args);
     $response->getBody()->write(json_encode($datos, JSON_PRETTY_PRINT));
     return $response;
 }

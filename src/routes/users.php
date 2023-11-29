@@ -8,6 +8,7 @@ $app->get('/user/getfollowers/{id}', 'getFollow');
 $app->post('/user/register', 'register');
 $app->post('/user/login', 'login');
 $app->put('/user/update/{id}', 'updateInfo');
+$app->post('/upload', 'uploadImgProf');
 
 
 function getAllUsers($request, $response, $args)
@@ -53,6 +54,14 @@ function login($request, $response)
 function updateInfo($request, $response, $args)
 {
     $datos = updateInf($request, $response, $args);
+    $response->getBody()->write(json_encode($datos, JSON_PRETTY_PRINT));
+    return $response;
+}
+
+
+function uploadImgProf($request, $response, $args)
+{
+    $datos = uploadIMG($request, $response, $args);
     $response->getBody()->write(json_encode($datos, JSON_PRETTY_PRINT));
     return $response;
 }

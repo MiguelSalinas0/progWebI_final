@@ -1,5 +1,7 @@
 <?php
 
+include 'funciones.php';
+
 // Login
 function ingresar($request, $response)
 {
@@ -41,6 +43,9 @@ function getAllUser($request, $response, $args)
         $statement->bindParam(1, $id);
         $statement->execute();
         $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($users as &$user) {
+            $user['profile'] = codificarIMG($user['profile']);
+        }
         $data = ['success' => true, 'data' => $users];
     } catch (PDOException $e) {
         $data = ['success' => false, 'error' => $e->getMessage()];
@@ -64,6 +69,11 @@ function getOneUser($request, $response, $args)
     $statement->bindParam(1, $id);
     $statement->execute();
     $user = $statement->fetch(PDO::FETCH_ASSOC);
+    if ($user) {
+        if (!empty($user['profile'])) {
+            $user['profile'] = codificarIMG($user['profile']);
+        }
+    }
     return $user;
 }
 
@@ -102,6 +112,47 @@ function getFollowU($id) // Trae los seguidos
     $statement->execute();
     $follow = $statement->fetchAll(PDO::FETCH_ASSOC);
     return $follow;
+}
+
+
+// Actualiza la foto de perfil de un usuario
+function uploadIMG($request, $response)
+{
+    global $pdo;
+    $uploadedFile = $request->getUploadedFiles()['image'];
+    $formData = $request->getParsedBody();
+    $imageName = $formData['imageName'];
+    $u_id = $formData['userId'];
+    $destination = dirname(dirname(__DIR__)) . '/imagenes/';
+    $data = [];
+    try {
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $filename = moveUploadedFile($destination, $uploadedFile, $imageName);
+            $query = "UPDATE users SET users.profile = ? WHERE users.user_id = ?";
+            $statement = $pdo->prepare($query);
+            $values = [
+                $filename,
+                $u_id
+            ];
+            $statement->execute($values);
+            if ($statement->rowCount() > 0) {
+                $user = getOne($u_id);
+                $data = ['success' => true, 'data' => $user];
+            }
+        }
+    } catch (Exception $e) {
+        $data = ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+    }
+    return $data;
+}
+
+// Guarda la foto de perfil y retorna el nombre y la extensión 
+function moveUploadedFile($directory, $uploadedFile, $imageName)
+{
+    $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+    $filename = sprintf('%s.%0.8s', $imageName, $extension);
+    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+    return $filename;
 }
 
 

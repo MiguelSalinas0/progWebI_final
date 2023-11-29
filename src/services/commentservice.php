@@ -17,6 +17,9 @@ function getComments($id)
     $statement->bindParam(1, $id);
     $statement->execute();
     $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($posts as &$post) {
+        $post['profile'] = codificarIMG($post['profile']);
+    }
     return $posts;
 }
 

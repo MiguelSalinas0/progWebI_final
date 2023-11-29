@@ -2,7 +2,6 @@
 
 require __DIR__ . '/commentservice.php';
 
-
 // Trae todos los post con comentarios y el autor
 function getAllPost()
 {
@@ -33,6 +32,7 @@ function getAllPost()
     return $data;
 }
 
+
 function getAutor($id) // Trae datos del autor de un post
 {
     global $pdo;
@@ -44,6 +44,7 @@ function getAutor($id) // Trae datos del autor de un post
     $statement->bindParam(1, $id);
     $statement->execute();
     $user = $statement->fetch(PDO::FETCH_ASSOC);
+    $user['profile'] = codificarIMG($user['profile']);
     return $user;
 }
 

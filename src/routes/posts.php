@@ -9,6 +9,7 @@ $app->put('/post/update', 'updateContPost');
 $app->delete('/post/remove/{id}', 'removePost');
 
 $app->post('/post/addcomment', 'addComment');
+$app->get('/post/getcomment/{id}', 'getComment');
 
 function getAll($request, $response)
 {
@@ -52,6 +53,13 @@ function removePost($request, $response, $args)
 function addComment($request, $response)
 {
     $datos = commentAdd($request, $response);
+    $response->getBody()->write(json_encode($datos, JSON_PRETTY_PRINT));
+    return $response;
+}
+
+function getComment($request, $response, $args)
+{
+    $datos = commentGet($request, $response, $args);
     $response->getBody()->write(json_encode($datos, JSON_PRETTY_PRINT));
     return $response;
 }

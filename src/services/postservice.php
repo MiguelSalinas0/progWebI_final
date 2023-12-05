@@ -2,6 +2,18 @@
 
 require __DIR__ . '/commentservice.php';
 
+
+// Trae todos los comentarios de un post
+function commentGet($request, $response, $args)
+{
+    $id = $args['id'];
+    $data = [];
+    $comments = getComments($id);
+    $data = ['success' => true, 'data' => $comments];
+    return $data;
+}
+
+
 // Trae todos los post con comentarios y el autor
 function getAllPost()
 {
@@ -24,6 +36,7 @@ function getAllPost()
         foreach ($posts as &$post) {
             $post['comentarios'] = getComments($post['post_id']);
             $post['autor'] = getAutor($post['user_id']);
+            $post['likedBy'] = allLikePost($post['post_id']);
         }
         $data = ['success' => true, 'data' => $posts];
     } catch (PDOException $e) {
@@ -80,6 +93,7 @@ function getAllPostUser($request, $response, $args)
     $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
     foreach ($posts as &$post) {
         $post['comentarios'] = getComments($post['post_id']);
+        $post['likedBy'] = allLikePost($post['post_id']);
     }
     $data = ['success' => true, 'autor' => getAutor($id), 'posts' => $posts];
     return $data;

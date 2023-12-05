@@ -97,6 +97,9 @@ function getFollowers($id) // Trae los seguidores
     $statement->bindParam(1, $id);
     $statement->execute();
     $followers = $statement->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($followers as &$user) {
+        $user['profile'] = codificarIMG($user['profile']);
+    }
     return $followers;
 }
 
@@ -111,6 +114,9 @@ function getFollowU($id) // Trae los seguidos
     $statement->bindParam(1, $id);
     $statement->execute();
     $follow = $statement->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($follow as &$user) {
+        $user['profile'] = codificarIMG($user['profile']);
+    }
     return $follow;
 }
 

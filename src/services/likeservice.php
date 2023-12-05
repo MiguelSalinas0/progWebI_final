@@ -1,6 +1,5 @@
 <?php
 
-
 // Lógica para dar o quitar un like a un post
 function likePost($request, $response)
 {
@@ -57,5 +56,20 @@ function removeLike($pdo, $userId, $postId)
         $stmt->execute([$userId, $postId]);
     } catch (Exception $e) {
         throw new Exception('Error al remover el like del post: ' . $e->getMessage());
+    }
+}
+
+
+// Función que trae todos los id de usuario que dieron like a una publicación
+function allLikePost($postId)
+{
+    try {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT l.user_id FROM likes l WHERE l.post_id = ?');
+        $stmt->execute([$postId]);
+        $likes = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $likes;
+    } catch (Exception $e) {
+        throw new Exception('Error al traer los id de usuarios que dieron like a un post: ' . $e->getMessage());
     }
 }
